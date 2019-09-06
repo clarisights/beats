@@ -18204,6 +18204,23 @@ type: long
 --
 
 [float]
+=== currentops
+
+currentops
+
+
+
+*`mongodb.currentops.example`*::
++
+--
+Example field
+
+
+type: keyword
+
+--
+
+[float]
 === dbstats
 
 dbstats provides an overview of a particular mongo database. This document is most concerned with data volumes of a database.

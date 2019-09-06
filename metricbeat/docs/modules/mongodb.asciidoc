@@ -108,6 +108,8 @@ The following metricsets are available:
 
 * <<metricbeat-metricset-mongodb-collstats,collstats>>
 
+* <<metricbeat-metricset-mongodb-currentops,currentops>>
+
 * <<metricbeat-metricset-mongodb-dbstats,dbstats>>
 
 * <<metricbeat-metricset-mongodb-metrics,metrics>>
@@ -117,6 +119,8 @@ The following metricsets are available:
 * <<metricbeat-metricset-mongodb-status,status>>
 
 include::mongodb/collstats.asciidoc[]
+
+include::mongodb/currentops.asciidoc[]
 
 include::mongodb/dbstats.asciidoc[]
 
