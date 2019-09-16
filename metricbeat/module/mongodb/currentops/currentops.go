@@ -1,6 +1,9 @@
 package currentops
 
 import (
+	"fmt"
+
+	s "github.com/elastic/beats/libbeat/common/schema"
 	"github.com/elastic/beats/libbeat/logp"
 	"github.com/elastic/beats/metricbeat/mb"
 	"github.com/elastic/beats/metricbeat/module/mongodb"
@@ -66,6 +69,7 @@ func (m *MetricSet) Fetch(reporter mb.ReporterV2) error {
 		return err
 	}
 
+	fmt.Printf("result: %+v\n", result)
 	ops, found := result["inprog"]
 	if !found {
 		err = errors.Wrap(err, "failed to retrieve inprog ops")
@@ -76,12 +80,45 @@ func (m *MetricSet) Fetch(reporter mb.ReporterV2) error {
 
 	// parse the response and transform it to a list of entries
 	for _, op := range ops.([]map[string]interface{}) {
+		opInterface, found := op["op"]
+		if !found {
+			err = fmt.Errorf("operation not specified")
+			reporter.Error(err)
+			m.Logger().Error(err)
+			continue
+		}
+
+		var schema s.Schema
+		operation := fmt.Sprintf("%v", opInterface)
+		switch operation {
+		case "none":
+			schema = schemaNone
+		case "update":
+			schema = schemaUpdate
+		case "insert":
+			schema = schemaInsert
+		case "query":
+			schema = schemaQuery
+		case "command":
+			schema = schemaCommand
+		case "getmore":
+			schema = schemaGetMore
+		case "remove":
+			schema = schemaRemove
+		case "killcursors":
+			schema = schemaKillCursors
+		default:
+			err = fmt.Errorf("unknown operation: %s", operation)
+			reporter.Error(err)
+			m.Logger().Error(err)
+			continue
+		}
 		entry, err := schema.Apply(op)
 		if err != nil {
 			err = errors.Wrap(err, "failed to apply schema")
 			reporter.Error(err)
 			m.Logger().Error(err)
-			return err
+			continue
 		}
 
 		// report each entry as an event
