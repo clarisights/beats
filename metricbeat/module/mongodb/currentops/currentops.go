@@ -69,7 +69,7 @@ func (m *MetricSet) Fetch(reporter mb.ReporterV2) error {
 		return err
 	}
 
-	fmt.Printf("result: %+v\n", result)
+	logp.Debug("mongodb", "Result: %+v", result)
 	ops, found := result["inprog"]
 	if !found {
 		err = errors.Wrap(err, "failed to retrieve inprog ops")
@@ -78,8 +78,12 @@ func (m *MetricSet) Fetch(reporter mb.ReporterV2) error {
 		return err
 	}
 
+	logp.Debug("mongodb", "Type of ops: %T", ops)
+	logp.Debug("mongodb", "Type of ops[0]: %T", ops.([]interface{})[0])
 	// parse the response and transform it to a list of entries
-	for _, op := range ops.([]map[string]interface{}) {
+	for _, op := range ops.([]interface{}) {
+		op := op.(map[string]interface{})
+		logp.Debug("mongodb", "op: %+v", op)
 		opInterface, found := op["op"]
 		if !found {
 			err = fmt.Errorf("operation not specified")
