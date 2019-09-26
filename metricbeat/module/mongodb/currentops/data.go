@@ -32,11 +32,12 @@ var schemacommand = s.Schema{
 	"batch_size": c.Int("batchSize", s.Optional),
 	"term":       c.Int("term", s.Optional),
 	"find":       c.Str("find", s.Optional),
-	"filter": c.DictOptional(c.Dict("filter", s.Schema{
-		"ts": c.DictOptional(c.Dict("ts", s.Schema{
-			"gte": c.Str("$gte", s.Optional),
-		})),
-	})),
+	// "filter": c.DictOptional(c.Dict("filter", s.Schema{
+	// 	"ts": c.DictOptional(c.Dict("ts", s.Schema{
+	// 		"gte": c.Str("$gte", s.Optional),
+	// 	})),
+	// })),
+	"filter":       c.Str("filter", s.Optional),
 	"tailable":     c.Bool("tailable", s.Optional),
 	"oplog_replay": c.Bool("oplogReplay", s.Optional),
 	"await_data":   c.Bool("awaitData", s.Optional),
