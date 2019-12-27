@@ -3,6 +3,12 @@
 	"ignore": "test github.com/elastic/beats",
 	"package": [
 		{
+			"checksumSHA1": "ynk+Ar4V88FJFXdTm9s4LrSFHho=",
+			"path": "github.com/elastic/beats/dev-tools/mage",
+			"revision": "717771f598d86cfcce965b179dbb72f2ff2e73b1",
+			"revisionTime": "2019-09-17T18:41:06Z"
+		},
+		{
 			"checksumSHA1": "GYschMPw/Zi5C4QnGKRfgljnx/c=",
 			"path": "github.com/gogo/protobuf/proto",
 			"revision": "636bf0302bc95575d69441b25a2603156ffdddf1",
@@ -58,11 +64,17 @@
 			"revisionTime": "2018-01-10T21:49:58Z"
 		},
 		{
+			"checksumSHA1": "3MMloGEeOp5DSWVD80vbdIekTSo=",
+			"path": "golang.org/x/tools/go/vcs",
+			"revision": "905c8ffbfa41b8a66dda0ba8e5d90908c3447522",
+			"revisionTime": "2019-09-17T21:19:48Z"
+		},
+		{
 			"checksumSHA1": "COfXAfInbcFT/YRsvLUQnNKHzF0=",
 			"path": "gopkg.in/inf.v0",
 			"revision": "d2d2541c53f18d2a059457998ce2876cc8e67cbf",
 			"revisionTime": "2018-03-26T17:23:32Z"
 		}
 	],
-	"rootPath": "github.com/elastic/beats/metricbeat"
+	"rootPath": "github.com/beats/metricbeat"
 }

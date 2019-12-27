@@ -2,7 +2,8 @@
 # Docs: https://www.elastic.co/guide/en/beats/metricbeat/master/metricbeat-module-mongodb.html
 
 - module: mongodb
-  #metricsets:
+  metricsets:
+    - currentops
   #  - dbstats
   #  - status
   #  - collstats
@@ -15,8 +16,10 @@
   # The username and password can also be set using the respective configuration
   # options. The credentials in the URL take precedence over the username and
   # password configuration options.
-  hosts: ["localhost:27017"]
-
+  hosts:
+    - "mongo-router-5:27020/adiq_production?authSource=admin" # production router
+    - "mongo-router-6:27020/adiq_production?authSource=admin" # production router
+  
   # Optional SSL. By default is off.
   #ssl.enabled: true
 
@@ -33,7 +36,7 @@
   #ssl.key: "/etc/pki/client/cert.key"
 
   # Username to use when connecting to MongoDB. Empty by default.
-  #username: user
+  username: ${MONGO_USERNAME}
 
   # Password to use when connecting to MongoDB. Empty by default.
-  #password: pass
+  password: ${MONGO_PASSWORD}
