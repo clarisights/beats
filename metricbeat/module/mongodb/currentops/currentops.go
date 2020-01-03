@@ -3,13 +3,18 @@ package currentops
 import (
 	"fmt"
 
+	"github.com/elastic/beats/libbeat/common"
 	s "github.com/elastic/beats/libbeat/common/schema"
 	"github.com/elastic/beats/libbeat/logp"
 	"github.com/elastic/beats/metricbeat/mb"
 	"github.com/elastic/beats/metricbeat/module/mongodb"
+	"github.com/go-redis/redis"
 	"github.com/pkg/errors"
 	"gopkg.in/mgo.v2/bson"
 )
+
+// Connection info for redis
+const redisConnectionString = "localhost:6379"
 
 var logger = logp.NewLogger("mongodb.dbstats")
 
@@ -124,6 +129,12 @@ func (m *MetricSet) Fetch(reporter mb.ReporterV2) error {
 			m.Logger().Error(err)
 			continue
 		}
+		err = appendFullMongoQuery(entry)
+		if err != nil {
+			err = errors.Wrap(err, "full query not found in the redis")
+			reporter.Error(err)
+			m.Logger().Error(err)
+		}
 
 		// report each entry as an event
 		reported := reporter.Event(mb.Event{MetricSetFields: entry})
@@ -134,4 +145,39 @@ func (m *MetricSet) Fetch(reporter mb.ReporterV2) error {
 		}
 	}
 	return nil
+}
+
+func appendFullMongoQuery(entry common.MapStr) error {
+	queryCommand, _ := entry["command"]
+	logp.Debug("MongoDB", "queryCommand: %+v", queryCommand)
+	if queryCommand != nil {
+		queryMap := queryCommand.(common.MapStr)
+		queryComment := queryMap["comment"]
+
+		if queryComment != nil {
+			stringComment := queryComment.(string)
+			logp.Debug("MongoDB", "stringComment %s", stringComment)
+
+			fullQuery, err := getQueryFromComment(stringComment)
+			if err != nil {
+				return err
+			}
+			logp.Debug("MongoDB", "fullQuery %s", fullQuery)
+			queryMap["full_query"] = fullQuery
+		}
+	}
+	return nil
+}
+
+func getQueryFromComment(queryComment string) (string, error) {
+	return valueFromRedis(queryComment)
+}
+
+func valueFromRedis(key string) (string, error) {
+	redisClient := redis.NewClient(&redis.Options{
+		Addr:     redisConnectionString,
+		Password: "", // no password set
+		DB:       31, // use mongo full query DB
+	})
+	return redisClient.Get(key).Result()
 }
