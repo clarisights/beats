@@ -13,8 +13,17 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// Connection info for redis
-const redisConnectionString = "localhost:6379"
+// Connection info for redis sentinel
+const redisConnectionString = "hephaestus:26379"
+const redisSentinelMasterName = "staging-redis"
+const redisFullQueryDBNumber = 31
+
+// Redis Sentinel client
+var redisClient = redis.NewFailoverClient(&redis.FailoverOptions{
+	MasterName:    redisSentinelMasterName,
+	SentinelAddrs: []string{redisConnectionString},
+	DB:            redisFullQueryDBNumber,
+})
 
 var logger = logp.NewLogger("mongodb.dbstats")
 
@@ -174,10 +183,5 @@ func getQueryFromComment(queryComment string) (string, error) {
 }
 
 func valueFromRedis(key string) (string, error) {
-	redisClient := redis.NewClient(&redis.Options{
-		Addr:     redisConnectionString,
-		Password: "", // no password set
-		DB:       31, // use mongo full query DB
-	})
 	return redisClient.Get(key).Result()
 }
