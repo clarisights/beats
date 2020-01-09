@@ -9,7 +9,7 @@
   #  - collstats
   #  - metrics
   #  - replstatus
-  period: 10s
+  period: 7s
 
   # The hosts must be passed as MongoDB URLs in the format:
   # [mongodb://][user:pass@]host[:port].
@@ -17,9 +17,8 @@
   # options. The credentials in the URL take precedence over the username and
   # password configuration options.
   hosts:
-    - "mongo-router-staging-3:27020/adiq_staging?authSource=admin" # staging router
-    # - "mongo-router-5:27020/adiq_production?authSource=admin" # production router
-    # - "mongo-router-6:27020/adiq_production?authSource=admin" # production router
+    - "mongo-router-5:27020/adiq_production?authSource=admin" # production router
+    - "mongo-router-6:27020/adiq_production?authSource=admin" # production router
   
   # Optional SSL. By default is off.
   #ssl.enabled: true

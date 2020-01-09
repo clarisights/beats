@@ -14,14 +14,16 @@ import (
 )
 
 // Connection info for redis sentinel
-const redisConnectionString = "hephaestus:26379"
-const redisSentinelMasterName = "staging-redis"
+var redisSentinels = []string{"app-redis-1:16379", "app-redis-2:16379", "app-redis-3:16379"}
+
+// We store full queries in app-redis
+const redisSentinelMasterName = "app-production-redis"
 const redisFullQueryDBNumber = 31
 
 // Redis Sentinel client
 var redisClient = redis.NewFailoverClient(&redis.FailoverOptions{
 	MasterName:    redisSentinelMasterName,
-	SentinelAddrs: []string{redisConnectionString},
+	SentinelAddrs: redisSentinels,
 	DB:            redisFullQueryDBNumber,
 })
 
