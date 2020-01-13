@@ -14,10 +14,10 @@ import (
 )
 
 // Connection info for redis sentinel
-var redisSentinels = []string{"app-redis-1:16379", "app-redis-2:16379", "app-redis-3:16379"}
+var redisSentinels = []string{"redis-1:16379", "redis-2:16379", "redis-3:16379"}
 
-// We store full queries in app-redis
-const redisSentinelMasterName = "app-production-redis"
+// We store full queries in cronjob redis
+const redisSentinelMasterName = "production-redis"
 const redisFullQueryDBNumber = 31
 
 // Redis Sentinel client
